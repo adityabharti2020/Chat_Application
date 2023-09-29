@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.radial-blue {
+  background: radial-gradient(lightyellow, skyblue)
+}
+.radial-green {
+  background: radial-gradient(rgb(49, 234, 234), rgb(46, 183, 229))
+}
+.Form-background {
+  background: radial-gradient(rgba(247, 245, 245, 0.4),rgba(95, 230, 83, 0.4))
+}
