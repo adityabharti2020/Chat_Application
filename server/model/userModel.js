@@ -34,6 +34,13 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    bio: { type: String },
+    image: {
+      type: String,
+      required: true,
+      default:
+        "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+    },
     contacts: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     passwordChangeAt: Date,
     passwordResetToken: Number,

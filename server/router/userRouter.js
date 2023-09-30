@@ -10,6 +10,8 @@ router
   .route("/getAllUser")
   .get(authController.protect, authController.getAllUser);
 
+router.route("/auth").get(authController.protect, authController.auth);
+
 router
   .route("/viewContactProfile")
   .get(authController.protect, authController.viewContactProfile);

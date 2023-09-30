@@ -17,7 +17,7 @@ exports.createChat = async (req, res) => {
 
     isChat = await User.populate(isChat, {
       path: "latestMsg.sender",
-      select: "name email",
+      select: "name email image",
     });
     if (!isChat) {
       return res.status(404).json({
@@ -56,12 +56,12 @@ exports.getChat = async (req, res) => {
 
     findChat = await User.populate(findChat, {
       path: "latestMsg.sender",
-      select: "name email",
+      select: "name email image",
     });
 
     res.status(200).json({
       status: "success",
-      data: { findChat },
+      findChat,
     });
   } catch (error) {
     console.log(error.message);
@@ -93,7 +93,7 @@ exports.createGroupChat = async (req, res) => {
     res.status(201).json({
       status: "success",
       message: "Chat Group created successfully",
-      data: fullGroupChat,
+      fullGroupChat,
     });
   } catch (error) {
     console.log(error.message);
@@ -153,7 +153,7 @@ exports.removeGroup = async (req, res) => {
 exports.addToGroup = async (req, res) => {
   try {
     const { userId, chatId } = req.body;
-    
+
     const added = await Chat.findByIdAndUpdate(
       chatId,
       { $push: { users: userId } },
