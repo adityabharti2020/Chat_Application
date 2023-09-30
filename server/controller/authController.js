@@ -45,11 +45,8 @@ const createSendToken = (user, statusCode, res, opt) => {
 exports.protect = async (req, res, next) => {
   try {
     let token;
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
+    if (req.headers.cookie && req.headers.cookie.startsWith("bearer")) {
+      token = req.headers.cookie.split("=")[1];
       // console.log({ token });
     }
 
@@ -90,11 +87,21 @@ exports.protect = async (req, res, next) => {
     });
   }
 };
+
+exports.auth = async (req, res) => {
+  res.json({
+    status: "success",
+    message: "User is authenticated",
+    user: req.user,
+  });
+};
+
 exports.signUp = async (req, res) => {
   try {
-    const { name, email, password, phone, passwordConfirm } = req.body;
+    const { name, email, password, phone, passwordConfirm, image, bio } =
+      req.body;
 
-    if (!name || !email || !phone) {
+    if (!name || !email || !phone || !image) {
       return res.status(400).json({ message: "Please fill all details" });
     }
     if (!password || !passwordConfirm) {
@@ -133,6 +140,8 @@ exports.signUp = async (req, res) => {
       password,
       phone,
       otpToken: parseInt(otp),
+      image,
+      bio,
     });
 
     createSendToken(user, 201, res);
@@ -251,7 +260,7 @@ exports.updateMe = async (req, res) => {
         .status(400)
         .json({ message: "This route is not for update password" });
     }
-    const filterFields = filterObj(req.body, "name", "email", "phone");
+    const filterFields = filterObj(req.body, "name", "email", "phone", "image");
     const updatedUser = await User.findByIdAndUpdate(
       res.user.id,
       filterFields,
