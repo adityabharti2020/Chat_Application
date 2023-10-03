@@ -46,18 +46,39 @@
 	
 }
 .input-group{
-    top: 130px;
+    top: 90px;
     position: absolute;
     width: 180px;
     transition: .5s;
 }
-.input-field{
-    width: 130%;
+.login-input-group{
+    top: 160px;
+    position: absolute;
+    width: 180px;
+    transition: .5s;
+    margin: 10px 5px;
+    
+}
+.login-input-field{
+    width: 150%;
     padding: 10px 0;
-    margin: 5px 0;
-    border-left: 0;
-    border-top: 0;
-    border-right: 0;
+    margin: 16px -38px;
+    /* margin-right: 10px; */
+    /* border-left: 0; */
+    /* border-top: 0; */
+    /* border-right: 0; */
+    border-bottom:  1px solid #999;
+    outline: none;
+    background: transparent;
+}
+.input-field{
+    width: 150%;
+    padding: 5px 0;
+    margin: 10px -38px;
+    /* margin-right: 10px; */
+    /* border-left: 0; */
+    /* border-top: 0; */
+    /* border-right: 0; */
     border-bottom:  1px solid #999;
     outline: none;
     background: transparent;
