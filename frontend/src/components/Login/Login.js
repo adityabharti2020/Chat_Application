@@ -1,14 +1,14 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import "./login.css";
 import { Link } from "react-router-dom";
-import AuthContext from "../../context/AuthProvider";
+// import AuthContext from "../../context/AuthProvider";
 import { baseURL } from "../../api/axios";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Login = (props) => {
+const Login = () => {
   const navigate = useNavigate();
-  const { setAuth } = useContext(AuthContext);
+  // const { setAuth } = useContext(AuthContext);
   const userRef = useRef();
   const errRef = useRef();
   const [formData, setFormData] = useState({
@@ -19,18 +19,10 @@ const Login = (props) => {
     signupPhone: "",
     signupPassword: "",
     confirmPassword: "",
+    File: "",
   });
   const [errmsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
-
-  // useEffect(() => {
-  // useRef.current.focus();
-  // console.log(formData);
-  // }, [formData]);
-
-  // useEffect(() => {
-  //   setErrMsg("");
-  // }, [user, password]);
 
   const [post, setpost] = useState({ login: "90", register: "450", btn: "0" });
   const switchForms = (type) => {
@@ -47,14 +39,17 @@ const Login = (props) => {
         email: formData.loginEmail,
         password: formData.loginPassword,
       });
-      console.log(response?.data?.data?.user);
+      // console.log(response.data.data.token);
       const loginData = JSON.stringify(response?.data.data.user);
       localStorage.setItem("loginData", loginData);
+      // console.log(response?.data)
       if (response?.data.data.user.email) {
         setSuccess(true);
-        setFormData("");
+        // setFormData("");
 
-        navigate("/dashboard");
+        navigate("/dashboard/chatpannel" ,{
+          state: { token: response.data.data.token },
+        });
       } else {
         navigate("/login");
       }
@@ -80,6 +75,7 @@ const Login = (props) => {
   };
   const SignUpSubmitHandler = async (e) => {
     e.preventDefault();
+    // console.log(baseURL)
     try {
       const response = await axios.post(`${baseURL}/signUp`, {
         name: formData.signupName,
@@ -87,6 +83,7 @@ const Login = (props) => {
         phone: formData.signupPhone,
         password: formData.signupPassword,
         passwordConfirm: formData.confirmPassword,
+        image: formData.File,
       });
 
       const signUpData = JSON.stringify(response?.data?.data?.user);
@@ -94,7 +91,9 @@ const Login = (props) => {
       if (response?.data?.data?.user.email) {
         setSuccess(true);
 
-        navigate("/dashboard");
+        navigate("/verify", {
+          state: { email: response?.data?.data?.user.email },
+        });
       }
       console.log(response?.data);
     } catch (err) {
@@ -119,7 +118,7 @@ const Login = (props) => {
   };
 
   return (
-    <div className="container Form-background flex justify-center items-center relative">
+    <div className="container Form-background flex justify-center items-center relative h-screen">
       <section className="absolute top-4 left-30 text-2xl red">
         <p
           ref={errRef}
@@ -153,25 +152,25 @@ const Login = (props) => {
       <img src={gp} /> */}
         </div>
         <form
-          className="login input-group"
+          className="login login-input-group"
           onSubmit={LoginSubmitHandlerFunction}
           style={{ left: `${post.login}px` }}
         >
           <input
             type="text"
-            className="input-field"
+            className="login-input-field"
             id="email"
             name="loginEmail"
             ref={userRef}
             autoComplete="on"
             value={formData.loginEmail}
-            placeholder="enter your email"
+            placeholder="Enter your email"
             onChange={handleLoginChange}
             required
           />
           <input
             type="password"
-            className="input-field"
+            className="login-input-field"
             id="password"
             name="loginPassword"
             value={formData.loginPassword}
@@ -188,6 +187,7 @@ const Login = (props) => {
           className="input-group"
           style={{ left: `${post.register}px` }}
           onSubmit={SignUpSubmitHandler}
+          enctype="multipart/form-data"
         >
           <input
             type="text"
@@ -231,7 +231,16 @@ const Login = (props) => {
             value={formData.confirmPassword}
             onChange={handleSignUpChange}
             className="input-field"
-            placeholder="Password"
+            placeholder="Confirm Password"
+            required
+          />
+          <input
+            type="file"
+            name="File"
+            value={formData.File}
+            onChange={handleSignUpChange}
+            className="input-field"
+            placeholder="Confirm Password"
             required
           />
           <button type="submit" className="submit-btn">
