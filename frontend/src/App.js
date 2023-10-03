@@ -1,6 +1,15 @@
 import React, { useEffect } from "react";
+<<<<<<< Updated upstream
 import Home from "./components/Home/Home";
 
+=======
+<<<<<<< HEAD
+import Home from "./components/Pages/Home/Home";
+=======
+import Home from "./components/Home/Home";
+
+>>>>>>> bf178accaf4f7be4006bf26d95bb4b6f3df0163b
+>>>>>>> Stashed changes
 import { Routes, Route } from "react-router-dom";
 
 import Login from "./components/Login/Login";
