@@ -15,7 +15,7 @@ const Dashboard = () => {
     const auth = async () => {
       try {
         const response = await axios.get(`${baseURL}/auth`);
-        // console.log(response);
+        console.log(response);
       } catch (error) {
         console.log(error);
       }

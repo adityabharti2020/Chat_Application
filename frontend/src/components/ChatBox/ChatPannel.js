@@ -7,44 +7,39 @@ import axios from "axios";
 import { baseURL2 } from "../../api/axios";
 import { baseURL3 } from "../../api/axios";
 
+const ENDPOINT = "http://localhost:3000";
+var socket, selectedChatComplete;
+
 const ChatPannel = () => {
   const { user, setUser } = ChatState();
   const { state } = useLocation();
-  const [message, setMessage] = useState();
-  const [newMessage, setNewMessage] = useState([]);
-    // console.log(state?.itemDetail);
-    
+  const [message, setMessage] = useState([]);
+  const [newMessage, setNewMessage] = useState();
+  console.log(state?.itemDetail);
+
   const SubmitHandlerFunction = async (event) => {
     event.preventDefault();
-    // console.log('check')
+
     if (newMessage) {
-      // console.log(newMessage)
       try {
-        // const config = {
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     Authorization: `Bearer ${user.token}`,
-        //   },
-        // };
-           
         const chat = await axios.post(`${baseURL3}/createChat`, {
           userId: state?.itemDetail,
         });
-        // console.log(chat.data.data.fullChat[0]._id);
+        console.log(chat.data.data.fullChat[0]._id);
         const { data } = await axios.post(`${baseURL2}/sendMessage`, {
           content: newMessage,
           chatId: chat.data.data.fullChat[0]._id,
         });
-        setNewMessage('');
-        // console.log()
-        const getMessage = await axios.get(`${baseURL2}/allMessages/${data.chat._id}`);
-        console.log(getMessage.data.getAllMsgs[0].content
-          );
-        setNewMessage([...newMessage,getMessage.data.getAllMsgs[0].content]);
-        console.log(newMessage)
+        setNewMessage("");
 
+        const getMessage = await axios.get(
+          `${baseURL2}/allMessages/${data.chat._id}`
+        );
+        console.log(getMessage);
+        setMessage([...message, getMessage.data.getAllMsgs[0].content]);
+        console.log(newMessage);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
   };
@@ -53,8 +48,13 @@ const ChatPannel = () => {
   };
   return (
     <div className="flex flex-col justify-between h-screen relative">
-      <div className="absolute px-5" style={{ top: "530px", right: "220px" }}>
-        {message}
+      <div
+        className="absolute px-5 flex-col "
+        style={{ top: "330px", right: "220px", height: "200" }}
+      >
+        {message.map((msg) => (
+          <p className="mt-1">{msg}</p>
+        ))}
       </div>
       <div className="absolute  px-5" style={{ top: "570px" }}>
         <form onSubmit={SubmitHandlerFunction}>
@@ -62,7 +62,7 @@ const ChatPannel = () => {
             type="text"
             className="ring-2 py-4 px-3 focus:outline-none rounded-sm text-xl"
             style={{ width: "950px" }}
-            // value={newMessage}
+            value={newMessage}
             onChange={typingHandler}
             placeholder="type msg"
           />

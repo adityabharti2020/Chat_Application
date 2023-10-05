@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
-import "./login.css";
+import "../../Login/login.css";
 import { Link } from "react-router-dom";
 // import AuthContext from "../../context/AuthProvider";
-import { baseURL } from "../../api/axios";
+import { baseURL } from "../../../api/axios";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 

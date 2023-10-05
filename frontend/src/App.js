@@ -1,26 +1,17 @@
 import React, { useEffect } from "react";
-<<<<<<< Updated upstream
 import Home from "./components/Home/Home";
 
-=======
-<<<<<<< HEAD
-import Home from "./components/Pages/Home/Home";
-=======
-import Home from "./components/Home/Home";
-
->>>>>>> bf178accaf4f7be4006bf26d95bb4b6f3df0163b
->>>>>>> Stashed changes
 import { Routes, Route } from "react-router-dom";
 
-import Login from "./components/Login/Login";
+import Login from "./components/Pages/Login/Login";
 import Dashboard from "./components/dashboard/Dashboard";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Chat } from "./components/chat/Chat";
-import Verification from "./components/Verification/Verification"
+import Verification from "./components/Verification/Verification";
 import ChatPannel from "./components/ChatBox/ChatPannel";
-import Demo1 from './components/DemoFolder/Demo1'
-import Demo2 from './components/DemoFolder/Demo2'
+import Demo1 from "./components/DemoFolder/Demo1";
+import Demo2 from "./components/DemoFolder/Demo2";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();

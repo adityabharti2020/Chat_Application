@@ -1,8 +1,8 @@
+// import "./login.css";
 import React, { useRef, useState, useEffect, useContext } from "react";
-import "./login.css";
 import { Link } from "react-router-dom";
 // import AuthContext from "../../context/AuthProvider";
-import { baseURL } from "../../api/axios";
+import { baseURL } from "../../api/axios.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -34,19 +34,20 @@ const Login = () => {
   };
   const LoginSubmitHandlerFunction = async (e) => {
     e.preventDefault();
+    console.log("hiii");
     try {
       const response = await axios.post(`${baseURL}/logIn`, {
         email: formData.loginEmail,
         password: formData.loginPassword,
       });
-      // console.log(response.data.data.token);
+      console.log(response.data.data.token);
       const loginData = JSON.stringify(response?.data.data.user);
       localStorage.setItem("loginData", loginData);
       // console.log(response?.data)
       if (response?.data.data.user.email) {
         setSuccess(true);
         // setFormData("");
-
+        console.log("Hilllll");
         navigate("/dashboard/chatpannel", {
           state: { token: response.data.data.token },
         });
