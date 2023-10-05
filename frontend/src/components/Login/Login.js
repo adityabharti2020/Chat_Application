@@ -3,7 +3,7 @@ import "./login.css";
 import { Link } from "react-router-dom";
 // import AuthContext from "../../context/AuthProvider";
 import { useLoginUserMutation } from "../../Query/Authentication";
-
+import { AiFillEyeInvisible } from "react-icons/ai";
 import { baseURL } from "../../api/axios";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +36,9 @@ const Login = () => {
       setpost({ ...post, login: "450", register: "90", btn: "110" });
     }
   };
+  const PasswordToggle = () => {
+    
+  }
   const LoginSubmitHandlerFunction = async (e) => {
     e.preventDefault();
     try {
@@ -51,7 +54,7 @@ const Login = () => {
         setSuccess(true);
         // setFormData("");
 
-        navigate("/dashboard/chatpannel" ,{
+        navigate("/dashboard/chatpannel", {
           state: { token: response.data.data.token },
         });
       } else {
@@ -174,7 +177,7 @@ const Login = () => {
           />
           <input
             type="password"
-            className="login-input-field"
+            className="login-input-field px-5"
             id="password"
             name="loginPassword"
             value={formData.loginPassword}
@@ -182,6 +185,19 @@ const Login = () => {
             onChange={handleLoginChange}
             required
           />
+          <span className="reletive" onClick = {PasswordToggle}>
+            {
+              <AiFillEyeInvisible
+                style={{
+                  position: "absolute",
+                  bottom: "16px",
+                  left: "180px",
+                  width: "22px",
+                  height: "20px",
+                }}
+              />
+            }
+          </span>
 
           <button type="submit" className="submit-btn pointer">
             Log In

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Sidebar from "../Shared/Sidebar";
 import Header from "../Shared/Header";
+import MiniDrawer from '../Shared/MiniDrawer'
 import { Outlet } from "react-router-dom";
 
 const Dashboard = () => {
@@ -37,7 +38,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-row h-screen w-screen bg-neutral-100 overflow-hidden">
-      <Sidebar userData={users} />
+      <MiniDrawer userData={users} />
       <div className="flex-1">
         <Header />
         <div>
