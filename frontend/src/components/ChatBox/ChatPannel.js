@@ -6,11 +6,15 @@ import { ChatState } from "../../context/AuthProvider";
 import axios from "axios";
 import { baseURL3 } from "../../api/axios";
 
+const ENDPOINT = "http://localhost:3000";
+var socket, selectedChatComplete;
+
 const ChatPannel = () => {
   // const { user, setUser } = ChatState();
   const { state } = useLocation();
   const [message, setMessage] = useState([]);
   const [newMessage, setNewMessage] = useState();
+
   const [sendchatId, setsendchatId] = useState();
  
    console.log(state.chatid)
@@ -60,6 +64,7 @@ const ChatPannel = () => {
   };
   return (
     <div className="flex flex-col justify-between h-screen relative">
+
       {state.chatid ? (<div
           className="absolute overflow-y-scroll  flex flex-col"
           style={{ top: "30px", right: "220px",height:"540px" }}
@@ -80,6 +85,7 @@ const ChatPannel = () => {
           <input
             type="text"
             className="ring-2 py-4 px-3 focus:outline-none rounded-sm text-xl w-full"
+
             value={newMessage}
             onChange={typingHandler}
             placeholder="type msg"
