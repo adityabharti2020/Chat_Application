@@ -2,11 +2,17 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 // import AuthContext from "../../context/AuthProvider";
-import { baseURL } from "../../api/axios.js";
+
+import { useLoginUserMutation } from "../../Query/Authentication";
+import { AiFillEyeInvisible } from "react-icons/ai";
+import { baseURL } from "../../api/axios";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [loginUser] = useLoginUserMutation();
+
   const navigate = useNavigate();
   // const { setAuth } = useContext(AuthContext);
   const userRef = useRef();
@@ -32,6 +38,9 @@ const Login = () => {
       setpost({ ...post, login: "450", register: "90", btn: "110" });
     }
   };
+  const PasswordToggle = () => {
+    
+  }
   const LoginSubmitHandlerFunction = async (e) => {
     e.preventDefault();
     console.log("hiii");
@@ -47,7 +56,9 @@ const Login = () => {
       if (response?.data.data.user.email) {
         setSuccess(true);
         // setFormData("");
-        console.log("Hilllll");
+
+
+
         navigate("/dashboard/chatpannel", {
           state: { token: response.data.data.token },
         });
@@ -171,7 +182,7 @@ const Login = () => {
           />
           <input
             type="password"
-            className="login-input-field"
+            className="login-input-field px-5"
             id="password"
             name="loginPassword"
             value={formData.loginPassword}
@@ -179,6 +190,19 @@ const Login = () => {
             onChange={handleLoginChange}
             required
           />
+          <span className="reletive" onClick = {PasswordToggle}>
+            {
+              <AiFillEyeInvisible
+                style={{
+                  position: "absolute",
+                  bottom: "16px",
+                  left: "180px",
+                  width: "22px",
+                  height: "20px",
+                }}
+              />
+            }
+          </span>
 
           <button type="submit" className="submit-btn pointer">
             Log In

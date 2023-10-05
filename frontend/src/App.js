@@ -15,12 +15,7 @@ import Demo2 from "./components/DemoFolder/Demo2";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
-  const logoutHandler = (check) => {
-    setIsLoggedIn(check);
-    if (isLoggedIn === false) {
-      navigate("/login");
-    }
-  };
+  
   return (
     <div className="App">
       <Routes>
@@ -28,7 +23,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route
           path="/dashboard"
-          element={<Dashboard onLogout={logoutHandler} />}
+          element={<Dashboard/>}
         />
         {/* <Route path="/chat" Component={Chat} /> */}
         <Route path="/verify" element={<Verification />} />

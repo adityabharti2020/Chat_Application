@@ -4,40 +4,56 @@ import { AiOutlineSend } from "react-icons/ai";
 import { useState } from "react";
 import { ChatState } from "../../context/AuthProvider";
 import axios from "axios";
-import { baseURL2 } from "../../api/axios";
 import { baseURL3 } from "../../api/axios";
 
 const ENDPOINT = "http://localhost:3000";
 var socket, selectedChatComplete;
 
 const ChatPannel = () => {
-  const { user, setUser } = ChatState();
+  // const { user, setUser } = ChatState();
   const { state } = useLocation();
   const [message, setMessage] = useState([]);
   const [newMessage, setNewMessage] = useState();
-  console.log(state?.itemDetail);
+
+  const [sendchatId, setsendchatId] = useState();
+ 
+   console.log(state.chatid)
+  const getAllMessage = async(id) => {
+    setsendchatId(id)
+    try {
+      const getMessage = await axios.get(
+        `${baseURL3}/getOneChat/${id}`
+      );
+      console.log(getMessage.data
+        );
+      setMessage([...message, getMessage.data.getAllMsgs[0].content]);
+    } catch (error) {
+      console.log(error)
+    }
+   
+   
+
+  }
+
+  useEffect(() => {
+    if(state){
+
+      getAllMessage(state.chatid);
+    }
+  },)
+  // getAllMessage();
 
   const SubmitHandlerFunction = async (event) => {
     event.preventDefault();
-
     if (newMessage) {
       try {
-        const chat = await axios.post(`${baseURL3}/createChat`, {
-          userId: state?.itemDetail,
-        });
-        console.log(chat.data.data.fullChat[0]._id);
-        const { data } = await axios.post(`${baseURL2}/sendMessage`, {
-          content: newMessage,
-          chatId: chat.data.data.fullChat[0]._id,
-        });
         setNewMessage("");
-
-        const getMessage = await axios.get(
-          `${baseURL2}/allMessages/${data.chat._id}`
-        );
-        console.log(getMessage);
-        setMessage([...message, getMessage.data.getAllMsgs[0].content]);
-        console.log(newMessage);
+        const { data } = await axios.post(`${baseURL3}/createChat`, {
+          content: newMessage,
+          chatId: sendchatId,
+        });
+        setsendchatId("")
+        
       } catch (error) {
         console.log(error);
       }
@@ -48,20 +64,28 @@ const ChatPannel = () => {
   };
   return (
     <div className="flex flex-col justify-between h-screen relative">
-      <div
-        className="absolute px-5 flex-col "
-        style={{ top: "330px", right: "220px", height: "200" }}
-      >
-        {message.map((msg) => (
-          <p className="mt-1">{msg}</p>
-        ))}
-      </div>
-      <div className="absolute  px-5" style={{ top: "570px" }}>
-        <form onSubmit={SubmitHandlerFunction}>
+
+      {state.chatid ? (<div
+          className="absolute overflow-y-scroll  flex flex-col"
+          style={{ top: "30px", right: "220px",height:"540px" }}
+        >
+      {message.map((msg) => (
+      
+         <p className="my-1">{msg}</p>
+
+      ))}
+        </div>) : <p>user not available</p>}
+       
+
+      <div className="absolute px-5 " style={{ top: "570px", width: "1280px" }}>
+        <form
+          
+          className="w-full min-w-sm max-w-xl sm:w-1/5 md:w-1/3 lg:w-1/2"
+        >
           <input
             type="text"
-            className="ring-2 py-4 px-3 focus:outline-none rounded-sm text-xl"
-            style={{ width: "950px" }}
+            className="ring-2 py-4 px-3 focus:outline-none rounded-sm text-xl w-full"
+
             value={newMessage}
             onChange={typingHandler}
             placeholder="type msg"

@@ -8,16 +8,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Popover, Transition, Menu } from "@headlessui/react";
 import { useState } from "react";
+import axios from "axios";
+import { baseURL } from "../../api/axios";
 
 
 const Header = () => {
   const navigate = useNavigate();
-  const [isLoggedOut, setIsLoggedIn] = useState(false);
-  const logoutHandler = (e) => {
-    if (isLoggedOut === false) {
-      navigate("/login");
-    }
-  };
+ 
 
   return (
     <div className="h-16 px-4 bg-cyan-500 flex justify-between items-center">
@@ -148,15 +145,15 @@ const Header = () => {
               </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
-                  <div
+                  <button
                     className={`
-                      ${active && "bg-gray-100"}
-                      "text-gray-700 hover:bg-gray-200 cursor-pointer rounded-sm px-4 py-2 ring-black ring-1 ring-opacity-5`
+                    ${active && "bg-gray-100"}
+                    "text-gray-700 hover:bg-gray-200 cursor-pointer rounded-sm px-4 py-2 ring-black ring-1 ring-opacity-5`
                     }
-                    onClick={() => navigate("/logout")}
+                    
                   >
                     logout
-                  </div>
+                  </button>
                 )}
               </Menu.Item>
             </Menu.Items>
