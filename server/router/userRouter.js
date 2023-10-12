@@ -1,9 +1,11 @@
 const express = require("express");
 const authController = require("./../controller/authController");
 const router = express.Router();
+// authController.uploadImage,
 
 router.route("/signUp").post(authController.signUp);
 router.route("/signUpVerification").post(authController.signUpVerification);
+// router.route("/uploadImage").post(authController.uploadImage);
 router.route("/logIn").post(authController.logIn);
 router.route("/logOut").get(authController.logOut);
 router
@@ -23,6 +25,10 @@ router
   .patch(authController.protect, authController.updateMyPassword);
 router
   .route("/updateMe")
-  .patch(authController.protect, authController.updateMe);
+  .patch(
+    authController.protect,
+    authController.uploadImage,
+    authController.updateMe
+  );
 
 module.exports = router;
