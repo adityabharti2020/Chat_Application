@@ -5,10 +5,13 @@ import { Link } from "react-router-dom";
 import { baseURL } from "../../../api/axios";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useLoginUserMutation } from '../../../Query/Authentication' 
 
 const Login = () => {
   const navigate = useNavigate();
   // const { setAuth } = useContext(AuthContext);
+  const [loginUser] = useLoginUserMutation();
+
   const userRef = useRef();
   const errRef = useRef();
   const [formData, setFormData] = useState({
@@ -33,6 +36,7 @@ const Login = () => {
     }
   };
   const LoginSubmitHandlerFunction = async (e) => {
+    console.log('hiii')
     e.preventDefault();
     try {
       const response = await axios.post(`${baseURL}/logIn`, {

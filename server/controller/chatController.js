@@ -50,7 +50,11 @@ exports.createChat = async (req, res) => {
 
 exports.getOneChat = async (req, res) => {
   try {
-    const getChat = await Chat.findById(req.params.id);
+    const currentUser = req.user;
+    const { userId } = req.params;
+    const getChat =
+      (await Chat.findOne({ user1: currentUser._id, user2: userId })) ||
+      (await Chat.findOne({ user1: userId, user2: currentUser._id }));
     if (!getChat) {
       return res.status(404).json({
         msg: "Chat not found",

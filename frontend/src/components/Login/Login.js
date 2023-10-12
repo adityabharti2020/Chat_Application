@@ -6,12 +6,10 @@ import { Link } from "react-router-dom";
 import { useLoginUserMutation } from "../../Query/Authentication";
 import { AiFillEyeInvisible } from "react-icons/ai";
 import { baseURL } from "../../api/axios";
-
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [loginUser] = useLoginUserMutation();
 
   const navigate = useNavigate();
   // const { setAuth } = useContext(AuthContext);
@@ -78,6 +76,17 @@ const Login = () => {
       errRef.current.focus();
     }
   };
+  //  const LoginSubmitHandlerFunction = async(e) => {
+  //   console.log('hii')
+  //        e.preventDefault();
+  //        try {
+  //         const response = await loginUser({email: formData.loginEmail,password: formData.loginPassword})
+  //          console.log(response)
+  //        } catch (error) {
+  //         console.log(error)
+  //        }
+  //  }
+  
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -118,7 +127,7 @@ const Login = () => {
       } else {
         setErrMsg("SignUp Failed");
       }
-      errRef.current.focus();
+      // errRef.current.focus();
     }
   };
   const handleSignUpChange = (e) => {

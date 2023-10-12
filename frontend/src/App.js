@@ -12,6 +12,7 @@ import Verification from "./components/Verification/Verification";
 import ChatPannel from "./components/ChatBox/ChatPannel";
 import Demo1 from "./components/DemoFolder/Demo1";
 import Demo2 from "./components/DemoFolder/Demo2";
+import Room from "./components/Basicmodel/Room";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ function App() {
         />
         {/* <Route path="/chat" Component={Chat} /> */}
         <Route path="/verify" element={<Verification />} />
+        <Route path="/dashboard/chatpannel/room/:roomId" element={<Room />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="/dashboard/chatpannel" element={<ChatPannel />}></Route>
           <Route path="/dashboard/demo1" element={<Demo1 />}></Route>

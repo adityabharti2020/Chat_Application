@@ -16,7 +16,7 @@ router
   .route("/getAllChat")
   .get(authController.protect, chatController.getAllChat);
 router
-  .route("/getOneChat/:id")
+  .route("/getOneChat/:userId")
   .get(authController.protect, chatController.getOneChat);
 
 router

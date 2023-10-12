@@ -10,6 +10,7 @@ const linkClass =
 const Sidebar = ({ userData }) => {
   const navigate = useNavigate();
 
+
   const logoutHandler = async () => {
     try {
       const response = await axios.get(`${baseURL}/logout`);
@@ -18,21 +19,20 @@ const Sidebar = ({ userData }) => {
       }
     } catch (error) {
       console.log(error);
+
     }
   };
   // console.log(userData)
 
   return (
     <div className="flex flex-col bg-cyan-950 text-white w-80 p-1 ">
-      <div className="flex items-center gap-2 px-1 py-3 ">
-        {<AiFillWechat fontSize={35} />}
-        <h3 className="text-2xl">ChatApp</h3>
+      <div className="flex items-center gap-2 justify-center px-1 py-2  bg-white rounded mx-7 my-1">
+        {<AiFillWechat fontSize={40} className="text-cyan-950 "/>}
+        <h3 className="text-3xl text-cyan-950 font-bold">ChatApp</h3>
       </div>
-      <div className="flex-1 py-6 flex flex-col gap-0.5 overflow-hidden hover:overflow-y-auto">
-        {userData?.map((item) => (
-          <SidebarLink key={item.key} item={item}>
-            {item.name}
-          </SidebarLink>
+      <div className="flex-1 py-4 flex flex-col gap-0.5 overflow-hidden hover:overflow-y-auto">
+        {userData?.map((users) => (
+          <SidebarLink user={users} login={loginId}/>
         ))}
       </div>
       <div className="flex flex-col gap-0.5 pt-2 border-t">
@@ -52,7 +52,9 @@ const Sidebar = ({ userData }) => {
           Logout
         </div>
       </div>
+
     </div>
+
     // </div>
   );
 };

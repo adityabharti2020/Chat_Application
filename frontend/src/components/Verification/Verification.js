@@ -24,7 +24,7 @@ const Verification = () => {
       console.log(response.data)
       if (response.data.status === "success") {
           alert(response.data.message);
-        navigate("/dashboard");
+        navigate("/login");
       } else  if(response.data.status === "fail") {
         alert(response.data.message);
         navigate("/login");
