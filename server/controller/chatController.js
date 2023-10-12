@@ -120,7 +120,7 @@ exports.deleteChat = async (req, res) => {
 //   try {
 //     const { userId } = req.body;
 //     if (!userId) {
-//       return res.status(404).json({ message: "User not found" });
+//       return res.status(404).json({ message: "User not f ound" });
 //     }
 //     // Check Chat is already exits or not
 //     let isChat = await Chat.find({
