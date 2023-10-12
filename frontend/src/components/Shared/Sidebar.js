@@ -7,7 +7,7 @@ import { baseURL } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 const linkClass =
   "flex items-center gap-2 font-light px-3 py-2 hover:bg-slate-50 hover:text-cyan-950 hover:no-underline active:bg-slate-100 rounded-sm text-base  mt-0.5";
-const Sidebar = ({ userData }) => {
+const Sidebar = ({ userData,loginId }) => {
   const navigate = useNavigate();
 
 

@@ -14,8 +14,6 @@ import Demo1 from "./components/DemoFolder/Demo1";
 import Demo2 from "./components/DemoFolder/Demo2";
 import Room from "./components/Basicmodel/Room";
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
   
   return (
     <div className="App">
