@@ -32,7 +32,7 @@ const Sidebar = ({userData,loginId}) => {
         {<AiFillWechat fontSize={40} className="text-cyan-950 "/>}
         <h3 className="text-3xl text-cyan-950 font-bold">ChatApp</h3>
       </div>
-      <div className="flex-1 py-4 flex flex-col gap-0.5 overflow-hidden hover:overflow-y-auto">
+      <div className="flex-1 py-6 flex flex-col gap-0.5 overflow-hidden hover:overflow-y-auto">
         {userData?.map((users) => (
           <SidebarLink user={users} login={loginId}/>
         ))}
