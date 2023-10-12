@@ -12,9 +12,9 @@ import axios from "axios";
 import { baseURL } from "../../api/axios";
 
 
-const Header = () => {
+const Header = ({loginId}) => {
   const navigate = useNavigate();
- 
+  
 
   return (
     <div className="h-16 px-4 bg-cyan-500 flex justify-between items-center">
@@ -30,6 +30,7 @@ const Header = () => {
         />
       </div>
       <div className="flex items-center gap-2 mr-2">
+        <p>{loginId?.user.name}</p>
         <Popover className="relative">
           {({ open }) => (
             <>

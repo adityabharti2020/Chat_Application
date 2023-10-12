@@ -19,13 +19,13 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { AiFillWechat } from "react-icons/ai";
+import { FcContacts } from "react-icons/fc";
 import { HiOutlineSearch, HiOutlineLogout } from "react-icons/hi";
-import SidebarLink from './SidebarLink'
-import { useNavigate } from 'react-router-dom'
+import SidebarLink from "./SidebarLink";
+import { useNavigate } from "react-router-dom";
+import BasicModal from '../Basicmodel/BasicModal'
 import { baseURL } from "../../api/axios";
-import axios from 'axios';
-
-
+import axios from "axios";
 
 const drawerWidth = 250;
 
@@ -94,22 +94,19 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export const MiniDrawer = ({userData}) => {
+export const MiniDrawer = ({ userData, loginId }) => {
   const navigate = useNavigate();
-
-  const logoutHandler = async() => {
-      try {
-          const response = await axios.get(`${baseURL}/logout`);
-          if(response){
-              navigate('/login')
-              
-          }
-          
-      } catch (error) {
-          console.log(error)
+  //  console.log(loginId)
+  const logoutHandler = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/logout`);
+      if (response) {
+        navigate("/login");
       }
-
-  }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -129,7 +126,6 @@ export const MiniDrawer = ({userData}) => {
           <IconButton
             color="inherit"
             aria-label="open drawer"
-
             onClick={handleDrawerOpen}
             edge="start"
             sx={{
@@ -139,18 +135,26 @@ export const MiniDrawer = ({userData}) => {
           >
             <MenuIcon />
           </IconButton>
-          <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-            <Box className="text-sm p-3 bg-black focus:outline-none rounded-l-lg  h-10 w-[2rem] ">
-            <HiOutlineSearch
-              fontSize={16}
-              className="bg-black  text-gray-400"
-            />
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            className="flex-1"
+          >
+            <Box className="text-sm p-3 bg-black focus:outline-none rounded-l-lg  h-10 w-[2rem]">
+              <HiOutlineSearch
+                fontSize={16}
+                className="bg-black  text-gray-400"
+              />
             </Box>
             <input
               type="text"
               placeholder="Search...."
               className="text-sm p-3 bg-black focus:outline-none h-10 w-[20rem] rounded-r-lg"
             />
+          </Box>
+          <Box>
+            <p>{loginId?.user.name}</p>
           </Box>
         </Toolbar>
       </AppBar>
@@ -171,30 +175,24 @@ export const MiniDrawer = ({userData}) => {
         </DrawerHeader>
         <Divider />
         <Box>
+          <List className="flex-1 py-4 flex flex-col gap-0.5 overflow-hidden hover:overflow-y-auto">
+              {userData?.map((users) => (
+                <SidebarLink user={users} login={loginId} />
+              ))}
+          </List>
+          <Divider />
           <List>
-        <div className="flex-1 py-4 flex flex-col gap-0.5 overflow-hidden hover:overflow-y-auto">
-        
-        {
-            userData?.map((item) => (
-                <SidebarLink key={item.key} item ={item}>
-                      {item.name}
-                </SidebarLink>
-            ))
-        }
-    </div>
-        </List>
-        <Divider />
-        <List>
-      
-        <div className='text-red-500 cursor-pointer flex items-center gap-2 font-light px-3 py-2 hover:bg-slate-50 hover:text-cyan-950 hover:no-underline active:bg-slate-100 rounded-sm text-base  mt-0.5'
-            onClick={logoutHandler}
-            >
-                
-                    {<HiOutlineLogout fontSize={24}/>}
-                
-                Logout
+            <div className="text-slate-900 cursor-pointer flex items-center font-light px-3 py-2 hover:bg-green-500 hover:text-white hover:no-underline active:bg-slate-100 rounded-sm text-base  mt-2.5">
+              {<FcContacts fontSize={24} />}<BasicModal/>
             </div>
-        </List>
+            <div
+              className="text-red-500 cursor-pointer flex items-center gap-2 font-light px-3 py-2 hover:bg-red-500 hover:text-white hover:no-underline active:bg-slate-100 rounded-sm text-base  mt-2.5"
+              onClick={logoutHandler}
+            >
+              {<HiOutlineLogout fontSize={24} />}
+              Logout
+            </div>
+          </List>
         </Box>
       </Drawer>
       {/* <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
