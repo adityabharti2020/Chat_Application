@@ -2,6 +2,8 @@ const express = require("express");
 const userRouter = require("./router/userRouter");
 const chatRouter = require("./router/chatRouter");
 const messageRouter = require("./router/messageRouter");
+const globalHandler = require("./controller/errorController");
+const AppError = require("./util/appError");
 const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
@@ -23,9 +25,10 @@ app.get("/", (req, res) => {
   return res.send("Hello from server side");
 });
 
-app.all("*", (req, res, err) => {
-  return res
-    .status(401)
-    .json({ message: `Can't find ${req.originalUrl} on this server!}` });
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!}`, 401));
 });
+
+app.use(globalHandler);
+
 module.exports = app;

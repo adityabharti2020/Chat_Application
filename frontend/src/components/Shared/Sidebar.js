@@ -6,25 +6,23 @@ import axios from "axios";
 import { baseURL } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 const linkClass =
+  "flex items-center gap-2 font-light px-3 py-2 hover:bg-slate-50 hover:text-cyan-950 hover:no-underline active:bg-slate-100 rounded-sm text-base  mt-0.5";
+const Sidebar = ({ userData }) => {
+  const navigate = useNavigate();
 
-	'flex items-center gap-2 font-light px-3 py-2 hover:bg-slate-50 hover:text-cyan-950 hover:no-underline active:bg-slate-100 rounded-sm text-base  mt-0.5'
-const Sidebar = ({userData,loginId}) => {
-    const navigate = useNavigate();
 
-    const logoutHandler = async() => {
-        try {
-            const response = await axios.get(`${baseURL}/logout`);
-            if(response){
-                navigate('/login')
-                
-            }
-            
-        } catch (error) {
-            console.log(error)
-        }
+  const logoutHandler = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/logout`);
+      if (response) {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
 
     }
-    // console.log(userData)
+  };
+  // console.log(userData)
 
   return (
     <div className="flex flex-col bg-cyan-950 text-white w-80 p-1 ">
@@ -46,17 +44,17 @@ const Sidebar = ({userData,loginId}) => {
                 ))
             } */}
 
-            <div className='text-red-500 cursor-pointer flex items-center gap-2 font-light px-3 py-2 hover:bg-slate-50 hover:text-cyan-950 hover:no-underline active:bg-slate-100 rounded-sm text-base  mt-0.5'
-            onClick={logoutHandler}
-            >
-                
-                    {<HiOutlineLogout fontSize={24}/>}
-                
-                Logout
-            </div>
-
+        <div
+          className="text-red-500 cursor-pointer flex items-center gap-2 font-light px-3 py-2 hover:bg-slate-50 hover:text-cyan-950 hover:no-underline active:bg-slate-100 rounded-sm text-base  mt-0.5"
+          onClick={logoutHandler}
+        >
+          {<HiOutlineLogout fontSize={24} />}
+          Logout
         </div>
       </div>
+
+    </div>
+
     // </div>
   );
 };

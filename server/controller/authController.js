@@ -1,8 +1,12 @@
 const User = require("../model/userModel");
 const sendEmail = require("./../util/email");
 const jwt = require("jsonwebtoken");
+const catchAsync = require("./../util/catchAsync");
+const AppError = require("./../util/appError");
 const otpGenerator = require("otp-generator");
 const { promisify } = require("util");
+const multer = require("multer");
+const path = require("path");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -18,6 +22,37 @@ const sendToken = (id) => {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };
+// const multerStorage = multer.diskStorage();
+// const multerFilter = (req, file, cb) => {
+//   if (file.mimetype.startsWith("image")) {
+//     cb(null, "Images", true);
+//   } else {
+//     cb(res.status(400).json("NOt an image, Please upload a image"), false);
+//   }
+// };
+
+// const upload = multer({
+//   staorage: multerStorage,
+//   fileFilter: multerFilter,
+// });
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    if (file.mimetype.startsWith("image")) {
+      cb(null, "Images", true);
+    } else {
+      cb(res.status(400).json("NOt an image, Please upload a image"), false);
+    }
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({
+  storage: multerStorage,
+});
+
+exports.uploadImage = upload.single("image");
 
 const createSendToken = (user, statusCode, res, opt) => {
   const token = sendToken(user._id);
@@ -96,55 +131,30 @@ exports.auth = async (req, res) => {
   });
 };
 
-exports.signUp = async (req, res) => {
+exports.signUp = catchAsync(async (req, res) => {
+  const { name, email, password, phone, passwordConfirm, image, bio } =
+    req.body;
+
+  if (!name || !email || !phone) {
+    return res.status(400).json({ message: "Please fill all details" });
+  }
+  if (!password || !passwordConfirm) {
+    return res.status(400).json({ message: "Password are not same" });
+  }
+
+  const otp = otpGenerator.generate(6, {
+    digits: true,
+    lowerCaseAlphabets: false,
+    upperCaseAlphabets: false,
+    specialChars: false,
+  });
+  const message = `OTP for account verification ${otp}`;
   try {
-    const { name, email, password, phone, passwordConfirm, image, bio } =
-      req.body;
-
-    if (!name || !email || !phone || !image) {
-      return res.status(400).json({ message: "Please fill all details" });
-    }
-    if (!password || !passwordConfirm) {
-      return res.status(400).json({ message: "Password are not same" });
-    }
-
-    const otp = otpGenerator.generate(6, {
-      digits: true,
-      lowerCaseAlphabets: false,
-      upperCaseAlphabets: false,
-      specialChars: false,
+    await sendEmail({
+      email: req.body.email,
+      subject: "Otp valid for 10 min",
+      message,
     });
-    const message = `OTP for account verification ${otp}`;
-    try {
-      await sendEmail({
-        email: req.body.email,
-        subject: "Otp valid for 10 min",
-        message,
-      });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({
-        status: "fail",
-        message: error.message,
-      });
-    }
-    const existUser = await User.exists({ email });
-    if (existUser) {
-      return res.status(500).json({
-        message: "Email already used",
-      });
-    }
-    const user = await User.create({
-      name,
-      email,
-      password,
-      phone,
-      otpToken: parseInt(otp),
-      image,
-      bio,
-    });
-
-    createSendToken(user, 201, res);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -152,66 +162,67 @@ exports.signUp = async (req, res) => {
       message: error.message,
     });
   }
-};
-
-exports.signUpVerification = async (req, res) => {
-  try {
-    const user = await User.findOne({ email: req.body.email });
-
-    if (user.is_verified) {
-      return res.status(400).json({
-        message: "Otp already verified",
-      });
-    }
-
-    if (user.otpToken === parseInt(req.body.otp)) {
-      (user.otpToken = undefined), (user.is_verified = true);
-      await user.save();
-    } else {
-      return res.status(401).json({
-        status: "fail",
-        message: "OTP didn't matched",
-      });
-    }
-    createSendToken(user, 200, res, "OTP verified");
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: "fail",
-      message: error.message,
+  const existUser = await User.exists({ email });
+  if (existUser) {
+    return res.status(500).json({
+      message: "Email already used",
     });
   }
-};
+  const user = await User.create({
+    name,
+    email,
+    password,
+    phone,
+    otpToken: parseInt(otp),
+    image,
+    bio,
+  });
+
+  createSendToken(user, 201, res);
+});
+
+exports.signUpVerification = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (user.is_verified) {
+    return res.status(400).json({
+      message: "Otp already verified",
+    });
+  }
+
+  if (user.otpToken === parseInt(req.body.otp)) {
+    (user.otpToken = undefined), (user.is_verified = true);
+    await user.save();
+  } else {
+    return res.status(401).json({
+      status: "fail",
+      message: "OTP didn't matched",
+    });
+  }
+  createSendToken(user, 200, res, "OTP verified");
+});
 
 // LogIn
-exports.logIn = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+exports.logIn = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({
-        status: "fail",
-        message: "Please provide email and password",
-      });
-    }
-
-    const user = await User.findOne({ email }).select("+password");
-    if (!user || !(await user.correctPassword(password, user.password))) {
-      return res.status(400).json({
-        status: "fail",
-        message: "Email and Password incorrect",
-      });
-    }
-
-    createSendToken(user, 200, res);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
+  if (!email || !password) {
+    return res.status(400).json({
       status: "fail",
-      message: error.message,
+      message: "Please provide email and password",
     });
   }
-};
+
+  const user = await User.findOne({ email }).select("+password");
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Email and Password incorrect",
+    });
+  }
+
+  createSendToken(user, 200, res);
+});
 
 // Log Out
 exports.logOut = (req, res) => {
@@ -229,28 +240,18 @@ exports.logOut = (req, res) => {
 };
 
 // Update Password
-exports.updateMyPassword = async (req, res) => {
-  try {
-    const user = await User.findById(res.user).select("+password");
+exports.updateMyPassword = catchAsync(async (req, res) => {
+  const user = await User.findById(res.user).select("+password");
 
-    if (
-      !(await user.correctPassword(req.body.passwordCurrent, user.password))
-    ) {
-      return res.status(400).json({ message: "Your Current password wrong" });
-    }
-
-    user.password = req.body.password;
-    user.passwordConfirm = req.body.passwordConfirm;
-    await user.save();
-    createSendToken(user, 200, res);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: "fail",
-      message: error.message,
-    });
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return res.status(400).json({ message: "Your Current password wrong" });
   }
-};
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  createSendToken(user, 200, res);
+});
 
 // Update Me
 exports.updateMe = async (req, res) => {
@@ -261,8 +262,10 @@ exports.updateMe = async (req, res) => {
         .json({ message: "This route is not for update password" });
     }
     const filterFields = filterObj(req.body, "name", "email", "phone", "image");
+    // const filteredBody = filterObj(req.body, "name", "email");
+    if (req.file) filterFields.image = req.file.filename;
     const updatedUser = await User.findByIdAndUpdate(
-      res.user.id,
+      req.user.id,
       filterFields,
       {
         new: true,
