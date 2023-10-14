@@ -36,7 +36,6 @@ const Login = () => {
     }
   };
   const LoginSubmitHandlerFunction = async (e) => {
-    console.log('hiii')
     e.preventDefault();
     try {
       const response = await axios.post(`${baseURL}/logIn`, {
@@ -122,7 +121,7 @@ const Login = () => {
   };
 
   return (
-    <div className="container Form-background flex justify-center items-center relative h-screen">
+    <div className="container Form-background flex justify-center items-center relative h-screen min-w-full">
       <section className="absolute top-4 left-30 text-2xl red">
         <p
           ref={errRef}

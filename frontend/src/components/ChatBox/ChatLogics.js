@@ -5,7 +5,7 @@ export const isSameSenderMargin = (messages, m, i, userId) => {
       i < messages.length - 1 &&
       (messages[i + 1].sender === m.sender ||
         messages[i + 1].sender !== userId) &&
-      messages[i].sender == userId
+      messages[i].sender === userId
     )
       return 950;
     else if (

@@ -10,6 +10,7 @@ import { isLastMessage } from "./ChatLogics";
 import { isSameSenderMargin } from "./ChatLogics";
 import { DateTimeFormater } from  "./ChatLogics"
 import BasicModal from '../Basicmodel/BasicModal'
+// import { useRef } from "react";
 // import {bgImage} from '../../assets/91e72f56e9dab16bd62a21a7c6b01d84-removebg-preview.png'
 
 const ENDPOINT = "http://localhost:3000";
@@ -17,6 +18,7 @@ var socket, selectedChatComplete;
 
 // const getChatId = JSON.parse(localStorage.getItem("chatid"));
 const ChatPannel = () => {
+  // const scrollRef = useRef()
   const { state } = useLocation();
   const [message, setMessage] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -69,6 +71,7 @@ const ChatPannel = () => {
           userId: state.userId,
           chatMsg: newMessage,
         });
+       
         // fetchMessagesAndSetState()
         // console.log(data)
         getAllMessage();
@@ -97,10 +100,10 @@ const ChatPannel = () => {
   return (
     <div className="">
       {state.userId ? (
-        <div className=" bg-slate-400 h-[642px] flex flex-col  px-2 py-2">
-          <div className="bg-slate-100 w-[1180px]  flex flex-col rounded">
+        <div className=" bg-slate-400 h-[642px] flex flex-col w-[1290px] px-2 py-2">
+          <div className="bg-slate-100 w-[1280px]  flex flex-col rounded">
             <div
-              className="flex pb-5 flex-row justify-between h-[550px] bg-black overflow-y-scroll px-5 py-5 mb-2"
+              className="flex pb-5 flex-row justify-between h-[550px]  bg-black overflow-y-scroll px-5 py-5 mb-2"
               style={{ scrollbarWidth: "none" }}
             >
               <div className=" flex flex-col">
@@ -123,9 +126,14 @@ const ChatPannel = () => {
                               flexDirection: "column",
                               marginLeft: `${
                                 m.sender === state.login?.user._id
-                                  ? "950px"
+                                  ? "1050px"
                                   : "0px"
                               }`,
+                              // padding:`${
+                              //   m.sender === state.userId
+                              //     ? "0px 100px"
+                              //     : "0px"
+                              // }`
                             }}
                           >
                             {m.chatMsg}
@@ -166,9 +174,8 @@ const ChatPannel = () => {
                         </p>
                       )} */}
             </div>
-          </div>
-          <div
-            className="bg-slate-900 w-[1180px] h-[80px] rounded mt-[6px] flex items-center px-5 flex-row"
+            <div
+            className="bg-slate-900 w-[1280px] h-[70px] rounded flex items-center px-5 flex-row"
             // style={{ top: "590px", width: "1280px", left: "410px" }}
           >
             <form
@@ -191,6 +198,8 @@ const ChatPannel = () => {
             </form>
             <div ><BasicModal userdata= {state}/></div>
           </div>
+          </div>
+         
         </div>
       ) : (
         <div className="flex justify-center items-center h-screen">

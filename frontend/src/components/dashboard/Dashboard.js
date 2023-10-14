@@ -41,7 +41,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex flex-row h-screen w-screen bg-neutral-100">
+    <div className="flex flex-row max-h-[705px] max-w-[1300px] bg-neutral-100">
       <Sidebar userData={users} loginId={loginId} />
       <div className="flex-1">
         <Header loginId={loginId} />

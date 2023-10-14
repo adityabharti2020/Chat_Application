@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   HiOutlineBell,
   HiOutlineChatAlt,
@@ -7,17 +7,20 @@ import {
 // import className from "classname";
 import { useNavigate } from "react-router-dom";
 import { Popover, Transition, Menu } from "@headlessui/react";
-import { useState } from "react";
-import axios from "axios";
-import { baseURL } from "../../api/axios";
+import SettingModal from "./SettingModal";
 
-
-const Header = ({loginId}) => {
+const Header = ({ loginId }) => {
   const navigate = useNavigate();
-  
-
+  const [display, setdisplay] = useState(true);
+  // console.log(loginId.user.image
+  //   )
+  const updateStateFromChild = (childValue) => {
+    // console.log(childValue)
+    setdisplay(childValue);
+    // console.log(display);
+  };
   return (
-    <div className="h-16 px-4 bg-cyan-500 flex justify-between items-center">
+    <div className="h-16 px-4 bg-cyan-500 flex justify-between items-center w-[1290px]">
       <div className="relative">
         <HiOutlineSearch
           fontSize={25}
@@ -37,8 +40,7 @@ const Header = ({loginId}) => {
               <Popover.Button
                 className={`
                   ${open && "bg-slate-300"}
-                  inline-flex items-center text-gray-700 hover:text-opacity-900 focus:outline-none active:bg-slate-300 p-1.5 rounded-lg`
-                }
+                  inline-flex items-center text-gray-700 hover:text-opacity-900 focus:outline-none active:bg-slate-300 p-1.5 rounded-lg`}
               >
                 <HiOutlineChatAlt fontSize={24} />
               </Popover.Button>
@@ -51,7 +53,7 @@ const Header = ({loginId}) => {
                 leaveTo="transform scale-95 opacity-0"
               >
                 <Popover.Panel className="mt-3 absolute right-1 z-10 w-80">
-                  <div className="shadow-md rounded-sm ring-1 ring-black ring-opacity-5 px-2 py-2.5">
+                  <div className="shadow-md rounded-sm ring-1 ring-black bg-white ring-opacity-5 px-2 py-2.5">
                     <strong className="text-gray-900 font-medium">
                       Messages
                     </strong>
@@ -83,7 +85,7 @@ const Header = ({loginId}) => {
                 leaveTo="transform scale-95 opacity-0"
               >
                 <Popover.Panel className="mt-3 absolute right-1 z-10 w-80">
-                  <div className="shadow-md rounded-sm ring-1 ring-black ring-opacity-5 px-2 py-2.5">
+                  <div className="shadow-md rounded-sm ring-1 ring-white bg-white ring-opacity-5 px-2 py-2.5">
                     <strong className="text-gray-900 font-medium">
                       Notification
                     </strong>
@@ -100,7 +102,10 @@ const Header = ({loginId}) => {
           <div>
             <Menu.Button className="ml-2 inline-flex rounded-full focus:outline-none focus:ring-2 focus:ring-neutral-600">
               <span className="sr-only">Open User Menu</span>
-              <div className="flex justify-center items-center">
+              <div
+                className="flex justify-center items-center"
+                onClick={() => setdisplay(false)}
+              >
                 <img
                   src="https://source.unsplash.com/60x60?face"
                   className="h-12 w-12 rounded-full"
@@ -110,59 +115,32 @@ const Header = ({loginId}) => {
               </div>
             </Menu.Button>
           </div>
-          <Transition
-            enter="transition ease-out duration-100"
-            enterFrom="transform opacity-0 scale-95"
-            enterTo="transform opacity-100 scale-100"
-            leave="transition ease-in duration-75"
-            leaveFrom="transform opacity-100 scale-100"
-            leaveTo="transform opacity-0 scale-95"
+          <div
+            className="relative"
+            // onBlur={() => setdisplay(true)}
+            // onMouseDown={() => setdisplay(true)}
+            onMouseLeave={()=>setdisplay(true)}
+            // onMouseOut={() => setdisplay(true)}
           >
-            <Menu.Items className="origin-top-right absolute z-10 right-0 w-48 rounded-sm mt-2 shadow-md p-1 bg-white ring-1 ring-opacity-5 focus:outline-none">
-              <Menu.Item>
-                {({ active }) => (
-                  <div
-                    className={`
-                      ${active && "bg-gray-100"}
-                      "text-gray-700 hover:bg-gray-200 cursor-pointer rounded-sm px-4 py-2 ring-black ring-1 ring-opacity-5`}
-                    onClick={() => navigate("/profile")}
-                  >
-                    Your profile
-                  </div>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <div
-                    className={`
-                      ${active && "bg-gray-100"}
-                      "text-gray-700 hover:bg-gray-200 cursor-pointer rounded-sm px-4 py-2 ring-black ring-1 ring-opacity-5`
-                    }
-                    onClick={() => navigate("/settings")}
-                  >
-                    Settings
-                  </div>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`
-                    ${active && "bg-gray-100"}
-                    "text-gray-700 hover:bg-gray-200 cursor-pointer rounded-sm px-4 py-2 ring-black ring-1 ring-opacity-5`
-                    }
-                    
-                  >
-                    logout
-                  </button>
-                )}
-              </Menu.Item>
-            </Menu.Items>
-          </Transition>
+            <div
+              className="w-[130px] h-[125px] rounded bg-gray-200 flex flex-col justify-between px-1 text-[20px]  absolute  right-1 top-1"
+              style={{ display: display === false ? "block" : "none" }}
+            >
+              <div>
+                <SettingModal setdisplayfun={updateStateFromChild} />
+              </div>
+              <div className="my-3 hover:bg-slate-400 hover:rounded px-2 cursor-pointer">
+                Setting
+              </div>
+              <div className="my-3 hover:bg-slate-400 hover:rounded px-2 cursor-pointer">
+                Logout
+              </div>
+            </div>
+          </div>
         </Menu>
       </div>
     </div>
   );
-}
+};
 
-export default Header
+export default Header;
